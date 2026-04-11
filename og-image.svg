@@ -1,85 +1,127 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1e6e4a"/>
+      <stop offset="0%" style="stop-color:#1a6040"/>
       <stop offset="50%" style="stop-color:#2E8C63"/>
       <stop offset="100%" style="stop-color:#3DAA7A"/>
     </linearGradient>
-    <linearGradient id="card" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:rgba(255,255,255,0.18)"/>
-      <stop offset="100%" style="stop-color:rgba(255,255,255,0.06)"/>
-    </linearGradient>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="8" stdDeviation="20" flood-color="rgba(0,0,0,0.25)"/>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="rgba(0,0,0,0.3)"/>
     </filter>
-    <filter id="glow">
-      <feDropShadow dx="0" dy="0" stdDeviation="30" flood-color="rgba(85,200,150,0.4)"/>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="28" flood-color="rgba(100,220,160,0.45)"/>
     </filter>
+    <clipPath id="bowlClip">
+      <ellipse cx="600" cy="248" rx="48" ry="48"/>
+    </clipPath>
   </defs>
 
   <!-- 배경 -->
   <rect width="1200" height="630" fill="url(#bg)"/>
 
-  <!-- 배경 원형 장식 -->
-  <circle cx="80" cy="80" r="280" fill="rgba(255,255,255,0.05)"/>
-  <circle cx="1150" cy="550" r="320" fill="rgba(255,255,255,0.05)"/>
-  <circle cx="1050" cy="60" r="160" fill="rgba(255,255,255,0.06)"/>
-  <circle cx="150" cy="560" r="200" fill="rgba(255,255,255,0.04)"/>
+  <!-- 배경 장식 원 -->
+  <circle cx="80"  cy="80"  r="270" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="1150" cy="560" r="310" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="1060" cy="55"  r="150" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="140"  cy="570" r="190" fill="rgba(255,255,255,0.04)"/>
+
+  <!-- 좌측 장식 도형들 -->
+  <circle cx="115" cy="230" r="38" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="115" cy="230" r="24" fill="rgba(255,255,255,0.15)"/>
+  <rect x="82" y="316" width="66" height="8" rx="4" fill="rgba(255,255,255,0.18)"/>
+  <rect x="88" y="330" width="54" height="8" rx="4" fill="rgba(255,255,255,0.13)"/>
+  <rect x="94" y="344" width="42" height="8" rx="4" fill="rgba(255,255,255,0.09)"/>
+  <circle cx="140" cy="420" r="30" fill="rgba(255,255,255,0.10)"/>
+  <circle cx="140" cy="420" r="18" fill="rgba(255,255,255,0.13)"/>
+  <line x1="100" y1="400" x2="180" y2="440" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="200" cy="165" r="20" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="75"  cy="490" r="25" fill="rgba(255,255,255,0.09)"/>
+
+  <!-- 우측 장식 도형들 -->
+  <circle cx="1085" cy="210" r="38" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="1085" cy="210" r="24" fill="rgba(255,255,255,0.15)"/>
+  <rect x="1052" cy="300" width="66" height="8" rx="4" fill="rgba(255,255,255,0.18)" y="300"/>
+  <rect x="1058" cy="314" width="54" height="8" rx="4" fill="rgba(255,255,255,0.13)" y="314"/>
+  <rect x="1064" cy="328" width="42" height="8" rx="4" fill="rgba(255,255,255,0.09)" y="328"/>
+  <circle cx="1060" cy="420" r="30" fill="rgba(255,255,255,0.10)"/>
+  <circle cx="1060" cy="420" r="18" fill="rgba(255,255,255,0.13)"/>
+  <line x1="1020" y1="400" x2="1100" y2="440" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="1010" cy="165" r="20" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="1130" cy="490" r="25" fill="rgba(255,255,255,0.09)"/>
 
   <!-- 중앙 카드 -->
-  <rect x="340" y="120" width="520" height="390" rx="40" ry="40"
-        fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"
+  <rect x="330" y="105" width="540" height="415" rx="40" ry="40"
+        fill="rgba(255,255,255,0.11)" stroke="rgba(255,255,255,0.28)" stroke-width="1.5"
         filter="url(#shadow)"/>
 
   <!-- 브랜드 배지 -->
-  <rect x="460" y="155" width="280" height="38" rx="19" ry="19"
-        fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
-  <text x="600" y="180" font-family="Arial, sans-serif" font-size="16" font-weight="800"
-        fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="3">GYEONGGI CARE</text>
+  <rect x="455" y="140" width="290" height="40" rx="20" ry="20"
+        fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+  <text x="600" y="166" font-family="Arial,Helvetica,sans-serif" font-size="15" font-weight="700"
+        fill="rgba(255,255,255,0.95)" text-anchor="middle" letter-spacing="4">GYEONGGI CARE</text>
 
-  <!-- 이모지 아이콘 -->
-  <text x="600" y="265" font-size="72" text-anchor="middle">🍱</text>
+  <!-- 뚝배기 아이콘 (SVG로 그린 그릇) -->
+  <!-- 그릇 몸통 -->
+  <ellipse cx="600" cy="268" rx="52" ry="44" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.5)" stroke-width="2.5"/>
+  <!-- 그릇 입구 타원 -->
+  <ellipse cx="600" cy="228" rx="52" ry="14" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+  <!-- 그릇 손잡이 왼쪽 -->
+  <rect x="538" y="224" width="14" height="10" rx="5" fill="rgba(255,255,255,0.45)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+  <!-- 그릇 손잡이 오른쪽 -->
+  <rect x="648" y="224" width="14" height="10" rx="5" fill="rgba(255,255,255,0.45)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+  <!-- 음식 표현 (원) -->
+  <circle cx="588" cy="252" r="7" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="608" cy="246" r="5" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="600" cy="260" r="6" fill="rgba(255,255,255,0.55)"/>
+  <!-- 김 올라오는 표현 -->
+  <path d="M590,216 Q585,208 590,200 Q595,192 590,184" stroke="rgba(255,255,255,0.45)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M600,213 Q595,205 600,197 Q605,189 600,181" stroke="rgba(255,255,255,0.55)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M610,216 Q605,208 610,200 Q615,192 610,184" stroke="rgba(255,255,255,0.45)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
 
   <!-- 메인 타이틀 -->
-  <text x="600" y="330" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
-        font-size="62" font-weight="900" fill="#ffffff" text-anchor="middle"
+  <text x="600" y="360" font-family="'Apple SD Gothic Neo','Malgun Gothic','NanumGothic',sans-serif"
+        font-size="70" font-weight="900" fill="#ffffff" text-anchor="middle"
         filter="url(#glow)">경기케어</text>
 
   <!-- 서브 타이틀 -->
-  <text x="600" y="385" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
-        font-size="28" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="middle"
-        letter-spacing="12">일 일 메 뉴</text>
+  <text x="600" y="408" font-family="'Apple SD Gothic Neo','Malgun Gothic','NanumGothic',sans-serif"
+        font-size="28" font-weight="600" fill="rgba(255,255,255,0.88)" text-anchor="middle"
+        letter-spacing="14">일 일 메 뉴</text>
 
   <!-- 구분선 -->
-  <line x1="500" y1="408" x2="700" y2="408" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <line x1="490" y1="430" x2="710" y2="430" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
 
-  <!-- 설명 -->
-  <text x="600" y="445" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
-        font-size="19" font-weight="500" fill="rgba(255,255,255,0.7)" text-anchor="middle">
-    오늘의 식단을 한눈에 확인하세요
-  </text>
+  <!-- 하단 식사 배지 -->
+  <!-- 아침 -->
+  <rect x="382" y="448" width="124" height="46" rx="23" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <!-- 태양 (아침) -->
+  <circle cx="415" cy="471" r="9" fill="rgba(255,220,100,0.85)"/>
+  <line x1="415" y1="456" x2="415" y2="451" stroke="rgba(255,220,100,0.7)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="415" y1="486" x2="415" y2="491" stroke="rgba(255,220,100,0.7)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="400" y1="471" x2="395" y2="471" stroke="rgba(255,220,100,0.7)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="430" y1="471" x2="435" y2="471" stroke="rgba(255,220,100,0.7)" stroke-width="2" stroke-linecap="round"/>
+  <text x="455" y="478" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="19" font-weight="700" fill="rgba(255,255,255,0.95)" text-anchor="middle">아침</text>
 
-  <!-- 하단 식사 아이콘 배지 -->
-  <rect x="395" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
-  <text x="455" y="497" font-size="20" text-anchor="middle">🌅 아침</text>
+  <!-- 점심 -->
+  <rect x="538" y="448" width="124" height="46" rx="23" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <!-- 해 (점심) -->
+  <circle cx="571" cy="471" r="11" fill="rgba(255,200,50,0.9)"/>
+  <line x1="571" y1="453" x2="571" y2="447" stroke="rgba(255,200,50,0.75)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="571" y1="489" x2="571" y2="495" stroke="rgba(255,200,50,0.75)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="553" y1="471" x2="547" y2="471" stroke="rgba(255,200,50,0.75)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="589" y1="471" x2="595" y2="471" stroke="rgba(255,200,50,0.75)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="558" y1="458" x2="554" y2="454" stroke="rgba(255,200,50,0.6)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="584" y1="484" x2="588" y2="488" stroke="rgba(255,200,50,0.6)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="584" y1="458" x2="588" y2="454" stroke="rgba(255,200,50,0.6)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="558" y1="484" x2="554" y2="488" stroke="rgba(255,200,50,0.6)" stroke-width="2" stroke-linecap="round"/>
+  <text x="611" y="478" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="19" font-weight="700" fill="rgba(255,255,255,0.95)" text-anchor="middle">점심</text>
 
-  <rect x="540" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
-  <text x="600" y="497" font-size="20" text-anchor="middle">☀️ 점심</text>
-
-  <rect x="685" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
-  <text x="745" y="497" font-size="20" text-anchor="middle">🌙 저녁</text>
-
-  <!-- 좌측 장식 메뉴 아이템들 -->
-  <text x="90" y="240" font-size="48" opacity="0.35">🥘</text>
-  <text x="55" y="340" font-size="36" opacity="0.25">🥗</text>
-  <text x="110" y="430" font-size="44" opacity="0.3">🍲</text>
-  <text x="170" y="180" font-size="32" opacity="0.2">🌶️</text>
-  <text x="220" y="490" font-size="30" opacity="0.2">🥬</text>
-
-  <!-- 우측 장식 메뉴 아이템들 -->
-  <text x="1060" y="220" font-size="48" opacity="0.35">🍗</text>
-  <text x="1095" y="340" font-size="36" opacity="0.25">🥩</text>
-  <text x="1040" y="440" font-size="44" opacity="0.3">🐟</text>
-  <text x="990" y="170" font-size="30" opacity="0.2">🥚</text>
-  <text x="980" y="510" font-size="32" opacity="0.2">🍜</text>
+  <!-- 저녁 -->
+  <rect x="694" y="448" width="124" height="46" rx="23" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <!-- 달 (저녁) -->
+  <path d="M727,462 A11,11 0 1,1 727,480 A7,7 0 1,0 727,462 Z" fill="rgba(200,210,255,0.9)"/>
+  <text x="757" y="478" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="19" font-weight="700" fill="rgba(255,255,255,0.95)" text-anchor="middle">저녁</text>
 </svg>
