@@ -421,34 +421,42 @@ function closeSheet(){
 
 /* ── 시트 스와이프 다운 제스처 ── */
 (function(){
-  var sh,startY,startT,dragging=false;
+  var sh,startY,startT,dragging=false,isDragging=false;
+  var DRAG_THRESHOLD=12; // 이 이상 움직여야 드래그로 인식 (탭과 구분)
   document.addEventListener('touchstart',function(e){
     var t=e.target;
     sh=document.getElementById('sheet');
     if(!sh||!document.getElementById('mealOv').classList.contains('on'))return;
     if(!sh.contains(t))return;
-    // 시트 내부 스크롤 중이면 무시
     if(sh.scrollTop>4)return;
     startY=e.touches[0].clientY;
     startT=Date.now();
     dragging=true;
+    isDragging=false;
   },{passive:true});
   document.addEventListener('touchmove',function(e){
     if(!dragging)return;
     var dy=e.touches[0].clientY-startY;
-    if(dy<0){dragging=false;return;}
+    if(dy<0){dragging=false;isDragging=false;return;}
+    if(dy<DRAG_THRESHOLD)return; // 임계값 미만은 무시 → click 이벤트 정상 발생
+    isDragging=true;
     sh.style.transition='none';
     sh.style.transform='translateY('+dy+'px)';
   },{passive:true});
   document.addEventListener('touchend',function(e){
     if(!dragging)return;
-    dragging=false;
+    var wasDragging=isDragging;
+    dragging=false;isDragging=false;
+    if(!wasDragging){
+      // 탭이었음 → transform 건드리지 않고 click 이벤트 그대로 통과
+      sh.style.transform='';
+      return;
+    }
     var dy=e.changedTouches[0].clientY-startY;
     var dt=Date.now()-startT;
     sh.style.transition='';
     sh.style.transform='';
-    // 120px 이상 내리거나 빠른 플릭이면 닫기
-    if(dy>120||(dy>40&&dt<250)){closeSheet();}
+    if(dy>100||(dy>30&&dt<300)){closeSheet();}
     else{gsap.to(sh,{y:0,duration:.25,ease:'power3.out'});}
   },{passive:true});
 })();
