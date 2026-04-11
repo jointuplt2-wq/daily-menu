@@ -402,8 +402,10 @@ function render(){
 }
 
 /* ── SHEET ── */
+var _closeTimer=null;
 function openSheet(d){
   curDate=d;
+  if(_closeTimer){clearTimeout(_closeTimer);_closeTimer=null;}
   var p=fmtParts(d);
   document.getElementById('shNum').textContent=p.da;
   document.getElementById('shMo').textContent=p.mo+'월';
@@ -413,17 +415,17 @@ function openSheet(d){
   for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
   var ov=document.getElementById('mealOv');
   var sh=document.getElementById('sheet');
-  gsap.killTweensOf(sh); // 이전 GSAP 애니메이션 완전 제거
-  sh.style.transform=''; // 인라인 스타일 초기화 → CSS 클래스가 제어
+  sh.classList.remove('is-open');
+  sh.style.transform='';
   ov.classList.add('on');
-  requestAnimationFrame(function(){sh.classList.add('is-open');});
+  void sh.offsetHeight; // 강제 리플로우 → CSS 전환 정상 발동
+  sh.classList.add('is-open');
 }
 function closeSheet(){
   var sh=document.getElementById('sheet');
   var ov=document.getElementById('mealOv');
-  gsap.killTweensOf(sh);
   sh.classList.remove('is-open');
-  setTimeout(function(){ov.classList.remove('on');},320);
+  _closeTimer=setTimeout(function(){ov.classList.remove('on');_closeTimer=null;},350);
 }
 
 /* 스와이프/오버레이 닫힘 제거 → "처음으로" 버튼으로만 닫힘 */
