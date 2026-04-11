@@ -422,13 +422,15 @@ function closeSheet(){
 /* ── 시트 스와이프 다운 제스처 ── */
 (function(){
   var sh,startY,startT,dragging=false,isDragging=false;
-  var DRAG_THRESHOLD=12; // 이 이상 움직여야 드래그로 인식 (탭과 구분)
+  var DRAG_THRESHOLD=20; // 이 이상 움직여야 드래그로 인식 (탭과 구분)
   document.addEventListener('touchstart',function(e){
     var t=e.target;
     sh=document.getElementById('sheet');
     if(!sh||!document.getElementById('mealOv').classList.contains('on'))return;
     if(!sh.contains(t))return;
     if(sh.scrollTop>4)return;
+    // 버튼류를 탭하는 경우 스와이프 무시
+    if(t.closest('.mbtn,.home-btn,.abtn,.mitem'))return;
     startY=e.touches[0].clientY;
     startT=Date.now();
     dragging=true;
@@ -456,7 +458,7 @@ function closeSheet(){
     var dt=Date.now()-startT;
     sh.style.transition='';
     sh.style.transform='';
-    if(dy>100||(dy>30&&dt<300)){closeSheet();}
+    if(dy>130||(dy>70&&dt<250)){closeSheet();}
     else{gsap.to(sh,{y:0,duration:.25,ease:'power3.out'});}
   },{passive:true});
 })();
