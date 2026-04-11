@@ -1,0 +1,13 @@
+{
+  "name": "경기케어 일일 메뉴",
+  "short_name": "경기케어",
+  "description": "오늘의 식단을 한눈에 확인하세요",
+  "start_url": "/yoons/",
+  "display": "standalone",
+  "background_color": "#2E8C63",
+  "theme_color": "#2E8C63",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
