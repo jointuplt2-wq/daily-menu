@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e6e4a"/>
+      <stop offset="50%" style="stop-color:#2E8C63"/>
+      <stop offset="100%" style="stop-color:#3DAA7A"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.18)"/>
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0.06)"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="20" flood-color="rgba(0,0,0,0.25)"/>
+    </filter>
+    <filter id="glow">
+      <feDropShadow dx="0" dy="0" stdDeviation="30" flood-color="rgba(85,200,150,0.4)"/>
+    </filter>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- 배경 원형 장식 -->
+  <circle cx="80" cy="80" r="280" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="1150" cy="550" r="320" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="1050" cy="60" r="160" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="150" cy="560" r="200" fill="rgba(255,255,255,0.04)"/>
+
+  <!-- 중앙 카드 -->
+  <rect x="340" y="120" width="520" height="390" rx="40" ry="40"
+        fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"
+        filter="url(#shadow)"/>
+
+  <!-- 브랜드 배지 -->
+  <rect x="460" y="155" width="280" height="38" rx="19" ry="19"
+        fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+  <text x="600" y="180" font-family="Arial, sans-serif" font-size="16" font-weight="800"
+        fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="3">GYEONGGI CARE</text>
+
+  <!-- 이모지 아이콘 -->
+  <text x="600" y="265" font-size="72" text-anchor="middle">🍱</text>
+
+  <!-- 메인 타이틀 -->
+  <text x="600" y="330" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="62" font-weight="900" fill="#ffffff" text-anchor="middle"
+        filter="url(#glow)">경기케어</text>
+
+  <!-- 서브 타이틀 -->
+  <text x="600" y="385" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="28" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="middle"
+        letter-spacing="12">일 일 메 뉴</text>
+
+  <!-- 구분선 -->
+  <line x1="500" y1="408" x2="700" y2="408" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+
+  <!-- 설명 -->
+  <text x="600" y="445" font-family="'Apple SD Gothic Neo','Malgun Gothic',sans-serif"
+        font-size="19" font-weight="500" fill="rgba(255,255,255,0.7)" text-anchor="middle">
+    오늘의 식단을 한눈에 확인하세요
+  </text>
+
+  <!-- 하단 식사 아이콘 배지 -->
+  <rect x="395" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
+  <text x="455" y="497" font-size="20" text-anchor="middle">🌅 아침</text>
+
+  <rect x="540" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
+  <text x="600" y="497" font-size="20" text-anchor="middle">☀️ 점심</text>
+
+  <rect x="685" y="468" width="120" height="46" rx="23" fill="rgba(255,255,255,0.15)"/>
+  <text x="745" y="497" font-size="20" text-anchor="middle">🌙 저녁</text>
+
+  <!-- 좌측 장식 메뉴 아이템들 -->
+  <text x="90" y="240" font-size="48" opacity="0.35">🥘</text>
+  <text x="55" y="340" font-size="36" opacity="0.25">🥗</text>
+  <text x="110" y="430" font-size="44" opacity="0.3">🍲</text>
+  <text x="170" y="180" font-size="32" opacity="0.2">🌶️</text>
+  <text x="220" y="490" font-size="30" opacity="0.2">🥬</text>
+
+  <!-- 우측 장식 메뉴 아이템들 -->
+  <text x="1060" y="220" font-size="48" opacity="0.35">🍗</text>
+  <text x="1095" y="340" font-size="36" opacity="0.25">🥩</text>
+  <text x="1040" y="440" font-size="44" opacity="0.3">🐟</text>
+  <text x="990" y="170" font-size="30" opacity="0.2">🥚</text>
+  <text x="980" y="510" font-size="32" opacity="0.2">🍜</text>
+</svg>
