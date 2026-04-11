@@ -376,8 +376,7 @@ function updateDateDisplay(skipMeal){
 
   if(!skipMeal){
     var h=new Date().getHours();
-    var meal=h<10?'아침':h<15?'점심':'저녁';
-    autoPickMeal(meal);
+    autoPickMeal(h<7?'아침':h<12?'점심':'저녁');
   }
 }
 
@@ -659,7 +658,8 @@ function renderPreview(data){}
   setTimeout(function(){
     if(navDates.length&&menuData[navDates[0]]){
       var h=new Date().getHours();
-      autoPickMeal(h<10?'아침':h<15?'점심':'저녁');
+      // 오전 7시 이전 → 아침, 오후 12시 이전 → 점심, 이후 → 저녁
+      autoPickMeal(h<7?'아침':h<12?'점심':'저녁');
     }
   },400);
 })();
