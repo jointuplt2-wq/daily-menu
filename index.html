@@ -215,8 +215,8 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 </div>
 
 <!-- MEAL SHEET -->
-<div class="ov" id="mealOv" onclick="if(event.target===this)closeSheet()">
-  <div class="sheet" id="sheet">
+<div class="ov" id="mealOv" onclick="closeSheet()">
+  <div class="sheet" id="sheet" onclick="event.stopPropagation()">
     <div class="handle-wrap"><div class="handle"></div></div>
     <div class="sh-top">
       <div class="sh-num" id="shNum">10</div>
