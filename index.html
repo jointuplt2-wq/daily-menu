@@ -91,9 +91,11 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 .admin-fab button{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--t3);border-radius:20px;color:var(--t2);font-size:.65rem;font-weight:700;cursor:pointer;padding:10px 16px;min-height:44px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
 
 /* OVERLAY */
-.ov{position:fixed;inset:0;background:rgba(20,40,32,.5);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.ov{position:fixed;inset:0;background:rgba(20,40,32,.5);z-index:100;display:none;align-items:flex-end;justify-content:center;pointer-events:none}
 .ov.on{display:flex}
 .ov.center{align-items:center;justify-content:center}
+/* 시트/모달 내부만 터치 가능 — 오버레이 배경은 클릭/터치 완전 차단 */
+.ov .sheet,.ov .pw-box,.ov .admin-panel{pointer-events:auto}
 
 /* MEAL SHEET */
 .sheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 16px calc(28px + var(--sab));width:100%;max-width:520px;transform:translateY(100%);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -216,7 +218,7 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 
 <!-- MEAL SHEET -->
 <div class="ov" id="mealOv">
-  <div class="sheet" id="sheet" onclick="event.stopPropagation()">
+  <div class="sheet" id="sheet">
     <div class="sh-top">
       <div class="sh-num" id="shNum">10</div>
       <div class="sh-info">
