@@ -98,7 +98,8 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 .ov .sheet,.ov .pw-box,.ov .admin-panel{pointer-events:auto}
 
 /* MEAL SHEET */
-.sheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 16px calc(28px + var(--sab));width:100%;max-width:520px;transform:translateY(100%);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 16px calc(28px + var(--sab));width:100%;max-width:520px;transform:translateY(100%);transition:transform 0.38s cubic-bezier(.22,.1,.25,1);max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sheet.is-open{transform:translateY(0)!important;transition:transform 0.38s cubic-bezier(.22,.1,.25,1)}
 .handle-wrap{padding:8px 0 6px;margin:-10px -16px 6px;cursor:grab}
 .handle{width:36px;height:4px;border-radius:2px;background:var(--t3);margin:0 auto}
 .sh-top{display:flex;align-items:flex-end;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1.5px solid var(--t4)}
@@ -401,10 +402,8 @@ function render(){
 }
 
 /* ── SHEET ── */
-var sheetReady=false; // 애니메이션 완료 후 true → 오버레이 탭으로 닫기 허용
 function openSheet(d){
   curDate=d;
-  sheetReady=false;
   var p=fmtParts(d);
   document.getElementById('shNum').textContent=p.da;
   document.getElementById('shMo').textContent=p.mo+'월';
@@ -414,13 +413,17 @@ function openSheet(d){
   for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
   var ov=document.getElementById('mealOv');
   var sh=document.getElementById('sheet');
+  gsap.killTweensOf(sh); // 이전 GSAP 애니메이션 완전 제거
+  sh.style.transform=''; // 인라인 스타일 초기화 → CSS 클래스가 제어
   ov.classList.add('on');
-  gsap.fromTo(sh,{y:'100%'},{y:'0%',duration:0.38,ease:'power3.out',onComplete:function(){sheetReady=true;}});
+  requestAnimationFrame(function(){sh.classList.add('is-open');});
 }
 function closeSheet(){
-  sheetReady=false;
   var sh=document.getElementById('sheet');
-  gsap.to(sh,{y:'100%',duration:0.28,ease:'power2.in',onComplete:function(){document.getElementById('mealOv').classList.remove('on');}});
+  var ov=document.getElementById('mealOv');
+  gsap.killTweensOf(sh);
+  sh.classList.remove('is-open');
+  setTimeout(function(){ov.classList.remove('on');},320);
 }
 
 /* 스와이프/오버레이 닫힘 제거 → "처음으로" 버튼으로만 닫힘 */
@@ -742,7 +745,7 @@ function renderPreview(data){}
           pickMeal(meal,btns[i]);break;
         }
       }
-    },400);
+    },500);
   }
   setTimeout(openToday,800);
 })();
