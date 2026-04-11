@@ -215,7 +215,7 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 </div>
 
 <!-- MEAL SHEET -->
-<div class="ov" id="mealOv" onclick="closeSheet()">
+<div class="ov" id="mealOv" onclick="if(sheetReady&&!document.getElementById('sheet').contains(event.target))closeSheet()">
   <div class="sheet" id="sheet" onclick="event.stopPropagation()">
     <div class="handle-wrap"><div class="handle"></div></div>
     <div class="sh-top">
@@ -400,8 +400,10 @@ function render(){
 }
 
 /* ── SHEET ── */
+var sheetReady=false; // 애니메이션 완료 후 true → 오버레이 탭으로 닫기 허용
 function openSheet(d){
   curDate=d;
+  sheetReady=false;
   var p=fmtParts(d);
   document.getElementById('shNum').textContent=p.da;
   document.getElementById('shMo').textContent=p.mo+'월';
@@ -412,9 +414,10 @@ function openSheet(d){
   var ov=document.getElementById('mealOv');
   var sh=document.getElementById('sheet');
   ov.classList.add('on');
-  gsap.fromTo(sh,{y:'100%'},{y:'0%',duration:0.38,ease:'power3.out'});
+  gsap.fromTo(sh,{y:'100%'},{y:'0%',duration:0.38,ease:'power3.out',onComplete:function(){sheetReady=true;}});
 }
 function closeSheet(){
+  sheetReady=false;
   var sh=document.getElementById('sheet');
   gsap.to(sh,{y:'100%',duration:0.28,ease:'power2.in',onComplete:function(){document.getElementById('mealOv').classList.remove('on');}});
 }
