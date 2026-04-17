@@ -1,6 +1,6 @@
 {
-  "name": "경기케어 일일 메뉴",
-  "short_name": "경기케어",
+  "name": "케어 메뉴",
+  "short_name": "케어 메뉴",
   "description": "오늘의 식단을 한눈에 확인하세요",
   "start_url": "/daily-menu/",
   "display": "standalone",
