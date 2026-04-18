@@ -334,8 +334,21 @@ function fmtWday(s){return DAYS[new Date(s).getDay()]+'요일';}
 /* ── 저장 ── */
 var _lsOk=(function(){try{localStorage.setItem('_t','1');localStorage.removeItem('_t');return true;}catch(e){return false;}})();
 function loadData(){
-  if(_lsOk){try{menuData=JSON.parse(localStorage.getItem('gkMenu')||'{}');}catch(e){menuData={};}}
-  render();
+  // menu.json(서버 자동생성) 우선, 실패 시 localStorage 사용
+  fetch('menu.json?_='+Date.now())
+    .then(function(r){if(!r.ok)throw new Error('no menu.json');return r.json();})
+    .then(function(data){
+      // menu.json 데이터를 localStorage 위 데이터와 병합 (관리자 수동입력 유지)
+      var local={};
+      if(_lsOk){try{local=JSON.parse(localStorage.getItem('gkMenu')||'{}');}catch(e){}}
+      // menu.json이 우선, local은 menu.json에 없는 날짜만 보충
+      menuData=Object.assign({},local,data);
+      render();
+    })
+    .catch(function(){
+      if(_lsOk){try{menuData=JSON.parse(localStorage.getItem('gkMenu')||'{}');}catch(e){menuData={};}}
+      render();
+    });
 }
 function saveData(){
   if(_lsOk){try{localStorage.setItem('gkMenu',JSON.stringify(menuData));}catch(e){_lsOk=false;}}

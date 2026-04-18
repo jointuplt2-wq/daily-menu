@@ -1,0 +1,35 @@
+name: 엑셀 → menu.json 자동 변환
+
+on:
+  push:
+    paths:
+      - '**.xlsx'
+      - '**.xls'
+      - '**.xlsm'
+
+permissions:
+  contents: write
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 의존성 설치
+        run: npm install
+
+      - name: 엑셀 파싱 → menu.json
+        run: node parse-menu.js
+
+      - name: menu.json 커밋 & 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add menu.json
+          git diff --cached --quiet || git commit -m "chore: menu.json 자동 업데이트 [skip ci]"
+          git push
