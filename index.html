@@ -113,6 +113,11 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 .admin-fab{position:fixed;bottom:calc(18px + var(--sab));right:calc(16px + var(--sar));z-index:50}
 .admin-fab button{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--t3);border-radius:20px;color:var(--t2);font-size:.65rem;font-weight:700;cursor:pointer;padding:10px 16px;min-height:44px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
 
+/* NOTIF FAB */
+.notif-fab{position:fixed;bottom:calc(18px + var(--sab));left:calc(16px + var(--sal));z-index:50}
+.notif-fab button{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--t3);border-radius:20px;color:var(--t2);font-size:.65rem;font-weight:700;cursor:pointer;padding:10px 16px;min-height:44px;box-shadow:0 2px 10px rgba(0,0,0,.1);transition:all .2s}
+.notif-fab button.on{background:var(--mint);color:var(--g1);border-color:var(--g2)}
+
 /* OVERLAY */
 .ov{position:fixed;inset:0;background:rgba(20,40,32,.5);z-index:100;display:none;align-items:center;justify-content:center;pointer-events:none}
 .ov.on{display:flex}
@@ -220,6 +225,11 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
     <div class="menu-ttl" id="menuTtl"></div>
     <div class="menu-body" id="menuBody"></div>
   </div>
+</div>
+
+<!-- NOTIF FAB -->
+<div class="notif-fab">
+  <button id="notifBtn" onclick="toggleNotif()">🔕 알림 OFF</button>
 </div>
 
 <!-- ADMIN FAB -->
@@ -406,8 +416,7 @@ function updateDateDisplay(skipMeal){
   document.getElementById('menuPanel').classList.remove('on');
 
   if(!skipMeal){
-    var h=new Date().getHours();
-    autoPickMeal(h<7?'아침':h<12?'점심':'저녁');
+    autoPickMeal(getMealByTime());
   }
 }
 
@@ -677,6 +686,83 @@ async function onPdf(e){
 
 function renderPreview(data){}
 
+/* ── 시간대 식사 판별 ── */
+// 아침 00:01~07:30 / 점심 07:31~12:30 / 저녁 12:31~자정
+function getMealByTime(){
+  var now=new Date();
+  var m=now.getHours()*60+now.getMinutes();
+  if(m<=450)return'아침';   // 7*60+30
+  if(m<=750)return'점심';   // 12*60+30
+  return'저녁';
+}
+
+/* ── 푸시 알림 ── */
+var NOTIF_TIMES=[
+  {meal:'아침',h:0,m:1},
+  {meal:'점심',h:7,m:31},
+  {meal:'저녁',h:12,m:31}
+];
+var notifTimers=[];
+
+function notifEnabled(){return localStorage.getItem('gkNotif')==='1';}
+
+function scheduleNotifs(){
+  notifTimers.forEach(clearTimeout);notifTimers=[];
+  if(!notifEnabled()||Notification.permission!=='granted')return;
+  var now=new Date();
+  NOTIF_TIMES.forEach(function(nt){
+    var target=new Date(now.getFullYear(),now.getMonth(),now.getDate(),nt.h,nt.m,0,0);
+    if(target<=now)target.setDate(target.getDate()+1);
+    var delay=target-now;
+    notifTimers.push(setTimeout(function(){
+      fireNotif(nt.meal);
+      setTimeout(scheduleNotifs,5000);
+    },delay));
+  });
+}
+
+function fireNotif(meal){
+  var today=todayStr();
+  var items=(menuData[today]||{})[meal]||[];
+  var icon=mealIcon(meal);
+  var body=items.length?items.slice(0,4).join(', '):'오늘의 메뉴를 확인하세요.';
+  try{
+    new Notification(icon+' '+meal+' 메뉴 안내',{
+      body:body,
+      icon:'https://raw.githubusercontent.com/jointuplt2-wq/daily-menu/master/icon-512.png',
+      badge:'https://raw.githubusercontent.com/jointuplt2-wq/daily-menu/master/favicon-32.png',
+      tag:'meal-'+meal
+    });
+  }catch(e){}
+}
+
+function toggleNotif(){
+  if(!('Notification'in window)){showPopup('err','미지원','이 브라우저는 알림을 지원하지 않습니다.');return;}
+  if(notifEnabled()){
+    localStorage.setItem('gkNotif','0');
+    notifTimers.forEach(clearTimeout);notifTimers=[];
+    updateNotifBtn();return;
+  }
+  if(Notification.permission==='denied'){showPopup('err','알림 차단됨','브라우저 설정에서 이 사이트의 알림을 허용해주세요.');return;}
+  Notification.requestPermission().then(function(perm){
+    if(perm==='granted'){
+      localStorage.setItem('gkNotif','1');
+      scheduleNotifs();
+      updateNotifBtn();
+      showPopup('ok','알림 설정 완료! 🔔','아침(00:01), 점심(07:31), 저녁(12:31)에\n오늘의 메뉴를 알려드릴게요.');
+    }else{
+      showPopup('err','알림 거부됨','알림 권한이 거부되었습니다.');
+    }
+  });
+}
+
+function updateNotifBtn(){
+  var btn=document.getElementById('notifBtn');if(!btn)return;
+  var on=notifEnabled()&&Notification.permission==='granted';
+  btn.textContent=on?'🔔 알림 ON':'🔕 알림 OFF';
+  btn.className=on?'on':'';
+}
+
 /* ── 초기화 ── */
 (function(){
   var now=new Date();
@@ -688,11 +774,12 @@ function renderPreview(data){}
   // 오늘 데이터 있으면 현재 시간대 식사 자동 선택
   setTimeout(function(){
     if(navDates.length&&menuData[navDates[0]]){
-      var h=new Date().getHours();
-      // 오전 7시 이전 → 아침, 오후 12시 이전 → 점심, 이후 → 저녁
-      autoPickMeal(h<7?'아침':h<12?'점심':'저녁');
+      autoPickMeal(getMealByTime());
     }
   },400);
+  // 알림 초기화
+  updateNotifBtn();
+  if(notifEnabled()&&Notification.permission==='granted')scheduleNotifs();
 })();
 </script>
 </body>
