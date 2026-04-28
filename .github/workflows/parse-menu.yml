@@ -33,3 +33,9 @@ jobs:
           git add menu.json
           git diff --cached --quiet || git commit -m "chore: menu.json 자동 업데이트 [skip ci]"
           git push
+
+      - name: 텔레그램 알림 발송
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=✅ 식단 엑셀 파일 업데이트 완료!"
