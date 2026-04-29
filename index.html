@@ -265,6 +265,35 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
   </div>
 </div>
 
+<!-- CHANGE PASSWORD -->
+<div class="ov" id="cpOv" onclick="if(event.target===this)closeChangePw()">
+  <div class="pw-box">
+    <div class="pw-lock">🔑</div>
+    <div class="pw-title" id="cpTitle">새 비밀번호 입력</div>
+    <div class="pw-sub" id="cpSub">4자리를 입력하세요</div>
+    <div class="pw-dots">
+      <div class="dot" id="cp0"></div><div class="dot" id="cp1"></div>
+      <div class="dot" id="cp2"></div><div class="dot" id="cp3"></div>
+    </div>
+    <div class="pw-err" id="cpErr"></div>
+    <div class="numpad">
+      <button class="npbtn" onclick="cpNp('1')">1</button>
+      <button class="npbtn" onclick="cpNp('2')">2</button>
+      <button class="npbtn" onclick="cpNp('3')">3</button>
+      <button class="npbtn" onclick="cpNp('4')">4</button>
+      <button class="npbtn" onclick="cpNp('5')">5</button>
+      <button class="npbtn" onclick="cpNp('6')">6</button>
+      <button class="npbtn" onclick="cpNp('7')">7</button>
+      <button class="npbtn" onclick="cpNp('8')">8</button>
+      <button class="npbtn" onclick="cpNp('9')">9</button>
+      <button class="npbtn emp"></button>
+      <button class="npbtn" onclick="cpNp('0')">0</button>
+      <button class="npbtn del" onclick="cpDel()">⌫</button>
+    </div>
+    <button class="pw-cancel" onclick="closeChangePw()">취소</button>
+  </div>
+</div>
+
 <!-- ADMIN PANEL -->
 <div class="admin-panel" id="adminPanel">
   <div class="ap-inner">
@@ -290,6 +319,7 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 저녁: 삼겹살, 쌈채소, 된장찌개"></textarea>
     <button class="abtn pri" onclick="doSave()">💾 메뉴 저장하기</button>
     <button class="abtn sec" onclick="closeAdmin()">← 돌아가기</button>
+    <button class="abtn sec" onclick="openChangePw()">🔑 비밀번호 변경</button>
     <button class="abtn dan" onclick="doReset()">🗑️ 전체 초기화</button>
   </div>
 </div>
@@ -477,12 +507,54 @@ function npDel(){pwStr=pwStr.slice(0,-1);syncDots();document.getElementById('pwE
 function syncDots(){for(var i=0;i<4;i++){document.getElementById('d'+i).classList.toggle('on',i<pwStr.length);}}
 async function checkPw(){
   var hash=await sha256(pwStr);
-  if(hash===PW_HASH){closePw();setTimeout(openAdmin,280);return;}
+  var stored=(_lsOk&&localStorage.getItem('gkPwHash'))||PW_HASH;
+  if(hash===stored){closePw();setTimeout(openAdmin,280);return;}
   document.getElementById('pwErr').textContent='비밀번호가 틀렸습니다 🔒';
   var box=document.getElementById('pwOv').querySelector('.pw-box');
   var tl=gsap.timeline();
   tl.to(box,{x:-9,duration:.06}).to(box,{x:9,duration:.06}).to(box,{x:-7,duration:.06}).to(box,{x:7,duration:.06}).to(box,{x:0,duration:.06});
   pwStr='';setTimeout(syncDots,450);
+}
+
+/* ── 비밀번호 변경 ── */
+var cpStep=1, cpNew='', cpStr='';
+function openChangePw(){
+  cpStep=1;cpNew='';cpStr='';syncCpDots();
+  document.getElementById('cpTitle').textContent='새 비밀번호 입력';
+  document.getElementById('cpSub').textContent='4자리를 입력하세요';
+  document.getElementById('cpErr').textContent='';
+  var ov=document.getElementById('cpOv');var box=ov.querySelector('.pw-box');
+  ov.classList.add('on');ov.style.pointerEvents='auto';
+  gsap.fromTo(box,{scale:.82,opacity:0},{scale:1,opacity:1,duration:.3,ease:'back.out(1.7)'});
+}
+function closeChangePw(){
+  var ov=document.getElementById('cpOv');var box=ov.querySelector('.pw-box');
+  gsap.to(box,{scale:.82,opacity:0,duration:.2,ease:'power2.in',onComplete:function(){ov.classList.remove('on');ov.style.pointerEvents='';}});
+}
+function cpNp(d){if(cpStr.length>=4)return;cpStr+=d;syncCpDots();if(cpStr.length===4)setTimeout(checkCpStep,280);}
+function cpDel(){cpStr=cpStr.slice(0,-1);syncCpDots();document.getElementById('cpErr').textContent='';}
+function syncCpDots(){for(var i=0;i<4;i++){document.getElementById('cp'+i).classList.toggle('on',i<cpStr.length);}}
+async function checkCpStep(){
+  if(cpStep===1){
+    cpNew=cpStr;cpStr='';cpStep=2;syncCpDots();
+    document.getElementById('cpTitle').textContent='새 비밀번호 확인';
+    document.getElementById('cpSub').textContent='한 번 더 입력하세요';
+    document.getElementById('cpErr').textContent='';
+  } else {
+    if(cpStr===cpNew){
+      var hash=await sha256(cpStr);
+      if(_lsOk)localStorage.setItem('gkPwHash',hash);
+      closeChangePw();
+      setTimeout(function(){showPopup('ok','변경 완료! 🔑','비밀번호가 변경되었습니다.');},280);
+    } else {
+      document.getElementById('cpErr').textContent='비밀번호가 일치하지 않아요 🔒';
+      var box=document.getElementById('cpOv').querySelector('.pw-box');
+      var tl=gsap.timeline();
+      tl.to(box,{x:-9,duration:.06}).to(box,{x:9,duration:.06}).to(box,{x:-7,duration:.06}).to(box,{x:7,duration:.06}).to(box,{x:0,duration:.06});
+      cpStr='';cpNew='';cpStep=1;
+      setTimeout(function(){syncCpDots();document.getElementById('cpTitle').textContent='새 비밀번호 입력';document.getElementById('cpSub').textContent='4자리를 입력하세요';document.getElementById('cpErr').textContent='';},600);
+    }
+  }
 }
 
 /* ── 어드민 ── */
