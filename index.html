@@ -31,7 +31,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
@@ -280,7 +279,6 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
       <div class="ub-hint">.xlsx 형식 · 날짜/아침/점심/저녁 포함된 메뉴표</div>
     </label>
     <input type="file" id="xlsxInput" accept=".xlsx,.xls,.xlsm" onchange="onXlsx(event)" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"/>
-    <input type="file" id="pdfInput" accept=".pdf" onchange="onPdf(event)" style="display:none"/>
     <div class="status-bar" id="statusBar"></div>
     <div class="sec-lbl" style="margin-top:6px">✏️ 텍스트 직접 편집</div>
     <div class="raw-hint">아래 형식으로 직접 입력하거나 엑셀 업로드 후 수정하세요.</div>
@@ -297,11 +295,18 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 </div>
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
 /* ── 상태 ── */
 var menuData={}, curDate=null, pwStr='';
-var PW='0203';
+var PW_HASH='c2576dd8541a225cce015475e2d5abbac99f247b91447a5389826e2bc62740c0';
+
+/* ── SHA-256 ── */
+async function sha256(str){
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+}
+
+/* ── HTML 이스케이프 ── */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var DAYS=['일','월','화','수','목','금','토'];
 
 /* ── 이모지 ── */
@@ -456,7 +461,7 @@ function pickMeal(meal, btn){
   } else {
     var h='';
     for(var i=0;i<items.length;i++){
-      h+='<div class="mitem"><span class="mitem-em">'+getEmoji(items[i])+'</span><span class="mitem-nm">'+items[i]+'</span></div>';
+      h+='<div class="mitem"><span class="mitem-em">'+getEmoji(items[i])+'</span><span class="mitem-nm">'+esc(items[i])+'</span></div>';
     }
     body.innerHTML=h;
   }
@@ -467,11 +472,12 @@ function pickMeal(meal, btn){
 /* ── 비밀번호 ── */
 function openPw(){pwStr='';syncDots();document.getElementById('pwErr').textContent='';var ov=document.getElementById('pwOv');var box=ov.querySelector('.pw-box');ov.classList.add('on');ov.style.pointerEvents='auto';gsap.fromTo(box,{scale:.82,opacity:0},{scale:1,opacity:1,duration:.3,ease:'back.out(1.7)'});}
 function closePw(){var ov=document.getElementById('pwOv');var box=ov.querySelector('.pw-box');gsap.to(box,{scale:.82,opacity:0,duration:.2,ease:'power2.in',onComplete:function(){ov.classList.remove('on');ov.style.pointerEvents='';}});}
-function np(d){if(pwStr.length>=4)return;pwStr+=d;syncDots();if(pwStr.length===4)setTimeout(checkPw,280);}
+function np(d){if(pwStr.length>=4)return;pwStr+=d;syncDots();if(pwStr.length===4)setTimeout(function(){checkPw();},280);}
 function npDel(){pwStr=pwStr.slice(0,-1);syncDots();document.getElementById('pwErr').textContent='';}
 function syncDots(){for(var i=0;i<4;i++){document.getElementById('d'+i).classList.toggle('on',i<pwStr.length);}}
-function checkPw(){
-  if(pwStr===PW){closePw();setTimeout(openAdmin,280);return;}
+async function checkPw(){
+  var hash=await sha256(pwStr);
+  if(hash===PW_HASH){closePw();setTimeout(openAdmin,280);return;}
   document.getElementById('pwErr').textContent='비밀번호가 틀렸습니다 🔒';
   var box=document.getElementById('pwOv').querySelector('.pw-box');
   var tl=gsap.timeline();
@@ -494,7 +500,7 @@ function showPopup(type,title,msg){
   var bg=type==='ok'?'linear-gradient(135deg,#2E8C63,#55C896)':'linear-gradient(135deg,#ef4444,#f87171)';
   var ic=type==='ok'?'✅':'⚠️';
   var w=document.createElement('div');w.id='_sp';w.className='sp-wrap';
-  w.innerHTML='<div class="sp-box"><span class="sp-icon">'+ic+'</span><div class="sp-ttl">'+title+'</div><div class="sp-msg">'+msg+'</div><button class="sp-btn" style="background:'+bg+'" onclick="document.getElementById(\'_sp\').parentNode.removeChild(document.getElementById(\'_sp\'))">확인</button></div>';
+  w.innerHTML='<div class="sp-box"><span class="sp-icon">'+ic+'</span><div class="sp-ttl">'+esc(title)+'</div><div class="sp-msg">'+esc(msg)+'</div><button class="sp-btn" style="background:'+bg+'" onclick="document.getElementById(\'_sp\').parentNode.removeChild(document.getElementById(\'_sp\'))">확인</button></div>';
   document.body.appendChild(w);
 }
 
@@ -510,7 +516,7 @@ function doSave(){
     saveData();render();
     setStatus('✅ '+cnt+'일치 메뉴 저장 완료!','ok');
     showPopup('ok','저장 완료! 🎉',cnt+'일치 메뉴가 저장되었습니다.');
-  }catch(e){showPopup('err','오류','저장 중 오류:\n'+e.message);}
+  }catch(e){showPopup('err','오류','저장 중 오류:\n'+esc(e.message));}
 }
 function doReset(){
   if(!confirm('모든 메뉴를 삭제할까요?'))return;
@@ -594,7 +600,7 @@ function onXlsx(e){
       for(var k in res)menuData[k]=res[k];
       saveData();render();
       setStatus('✅ 엑셀 로드 완료 ('+cnt+'일치 저장)','ok');
-    }catch(err){setStatus('❌ 엑셀 오류: '+err.message,'err');}
+    }catch(err){setStatus('❌ 엑셀 오류: '+esc(err.message),'err');}
     e.target.value='';
   };
   reader.readAsArrayBuffer(file);
@@ -655,36 +661,6 @@ function parseXlsxRows(rowsRaw,rowsFmt,res,rawLines){
   }
 }
 
-/* ── PDF ── */
-async function onPdf(e){
-  var file=e.target.files[0];if(!file)return;
-  setStatus('<span class="spin"></span> PDF 읽는 중…','info');
-  try{
-    var buf=await file.arrayBuffer();
-    var pdf=await pdfjsLib.getDocument(buf).promise;
-    var lines=[];
-    for(var p=1;p<=pdf.numPages;p++){
-      var pg=await pdf.getPage(p);var tc=await pg.getTextContent();
-      var items=[];
-      for(var i=0;i<tc.items.length;i++){var it=tc.items[i];if(it.str.trim())items.push({t:it.str,x:Math.round(it.transform[4]),y:Math.round(it.transform[5])});}
-      if(!items.length)continue;
-      items.sort(function(a,b){return b.y!==a.y?b.y-a.y:a.x-b.x;});
-      var row=[items[0]];
-      for(var i=1;i<items.length;i++){
-        if(Math.abs(items[i].y-row[0].y)<=6)row.push(items[i]);
-        else{row.sort(function(a,b){return a.x-b.x;});lines.push(row.map(function(x){return x.t;}).join('\t'));row=[items[i]];}
-      }
-      row.sort(function(a,b){return a.x-b.x;});lines.push(row.map(function(x){return x.t;}).join('\t'));
-    }
-    var raw=lines.join('\n').trim();
-    document.getElementById('rawArea').value=raw;
-    var cnt=Object.keys(parseTxt(raw)).length;
-    setStatus('✅ PDF 로드 완료 ('+pdf.numPages+'페이지'+(cnt?', '+cnt+'일치 감지':'')+')','ok');
-  }catch(err){setStatus('❌ PDF 오류: '+err.message,'err');}
-  e.target.value='';
-}
-
-function renderPreview(data){}
 
 /* ── 시간대 식사 판별 ── */
 // 아침 00:01~07:30 / 점심 07:31~12:30 / 저녁 12:31~자정
