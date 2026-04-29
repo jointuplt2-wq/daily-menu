@@ -3,9 +3,9 @@ name: 엑셀 → menu.json 자동 변환
 on:
   push:
     paths:
-      - '**.xlsx'
-      - '**.xls'
-      - '**.xlsm'
+      - '엑셀파일저장/**.xlsx'
+      - '엑셀파일저장/**.xls'
+      - '엑셀파일저장/**.xlsm'
   schedule:
     - cron: '0 0 9,19,28 * *'  # 매월 9, 19, 28일 자정(UTC) 자동 실행
 

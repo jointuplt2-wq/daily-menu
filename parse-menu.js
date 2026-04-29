@@ -105,8 +105,9 @@ function parseXlsxRows(rowsRaw, rowsFmt, res) {
   }
 }
 
-// 저장소 루트에서 가장 최근 xlsx 파일 찾기
-const xlsxFiles = fs.readdirSync('.').filter(f => /\.(xlsx|xls|xlsm)$/i.test(f));
+// 엑셀파일저장 폴더에서 가장 최근 xlsx 파일 찾기
+const excelDir = '엑셀파일저장';
+const xlsxFiles = fs.readdirSync(excelDir).filter(f => /\.(xlsx|xls|xlsm)$/i.test(f)).map(f => path.join(excelDir, f));
 if (!xlsxFiles.length) {
   console.error('❌ xlsx 파일이 없습니다.');
   process.exit(1);
