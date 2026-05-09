@@ -1,5 +1,4 @@
 const fs = require('fs');
-const https = require('https');
 
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
@@ -33,27 +32,15 @@ if (!dayMenu || !dayMenu[MEAL] || !dayMenu[MEAL].length) {
   text = `${icon} *경기케어 ${MEAL} 메뉴* (${today.slice(5)} ${dayStr})\n\n${items}\n\n🔗 [메뉴 보기](https://jointuplt2-wq.github.io/daily-menu/)`;
 }
 
-const body = JSON.stringify({
-  chat_id: CHAT_ID,
-  text,
-  parse_mode: 'Markdown',
-  disable_web_page_preview: false
-});
-
-const req = https.request({
-  hostname: 'api.telegram.org',
-  path: `/bot${TOKEN}/sendMessage`,
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
-}, res => {
-  let data = '';
-  res.on('data', chunk => data += chunk);
-  res.on('end', () => {
-    const result = JSON.parse(data);
-    if (result.ok) console.log(`✅ ${MEAL} 메뉴 텔레그램 발송 완료`);
-    else { console.error('❌ 발송 실패:', result.description); process.exit(1); }
+async function main() {
+  const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'Markdown', disable_web_page_preview: false })
   });
-});
-req.on('error', e => { console.error('❌ 요청 오류:', e.message); process.exit(1); });
-req.write(body);
-req.end();
+  const result = await res.json();
+  if (result.ok) console.log(`✅ ${MEAL} 메뉴 텔레그램 발송 완료`);
+  else { console.error('❌ 발송 실패:', result.description); process.exit(1); }
+}
+
+main().catch(e => { console.error('❌ 오류:', e.message); process.exit(1); });
