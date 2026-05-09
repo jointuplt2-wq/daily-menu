@@ -1,0 +1,49 @@
+name: 텔레그램 식단 알림
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 아침 07:00 KST
+    - cron: '0 3 * * *'    # 점심 12:00 KST
+    - cron: '30 8 * * *'   # 저녁 17:30 KST
+  workflow_dispatch:
+    inputs:
+      meal:
+        description: '알림 보낼 식사 (아침/점심/저녁)'
+        required: true
+        default: '점심'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 의존성 설치
+        run: npm install
+
+      - name: 식사 시간 결정
+        id: meal
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "meal=${{ github.event.inputs.meal }}" >> $GITHUB_OUTPUT
+          else
+            HOUR=$(TZ=Asia/Seoul date +%H)
+            if [ "$HOUR" -lt 10 ]; then
+              echo "meal=아침" >> $GITHUB_OUTPUT
+            elif [ "$HOUR" -lt 15 ]; then
+              echo "meal=점심" >> $GITHUB_OUTPUT
+            else
+              echo "meal=저녁" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: 텔레그램 알림 발송
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MEAL: ${{ steps.meal.outputs.meal }}
+        run: node send-notify.js
