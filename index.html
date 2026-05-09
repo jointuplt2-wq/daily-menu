@@ -298,7 +298,7 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 <div class="admin-panel" id="adminPanel">
   <div class="ap-inner">
     <div class="ap-head">
-      <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-3px;margin-right:6px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/><path d="M7 13.5A1.5 1.5 0 1 0 7 16.5 1.5 1.5 0 0 0 7 13.5zM17 13.5A1.5 1.5 0 1 0 17 16.5 1.5 1.5 0 0 0 17 13.5z" fill="none"/></svg><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> 관리자 패널</h2>
+      <h2>⚙️ 관리자 패널</h2>
       <button class="ap-close" onclick="closeAdmin()">✕</button>
     </div>
     <div class="sec-lbl">📊 엑셀(xlsx) 메뉴 업로드</div>
@@ -318,14 +318,6 @@ textarea{font-size:16px!important;-webkit-overflow-scrolling:touch}
 점심: 비빔밥, 미역국, 불고기, 깍두기
 저녁: 삼겹살, 쌈채소, 된장찌개"></textarea>
     <button class="abtn pri" onclick="doSave()">💾 메뉴 저장하기</button>
-    <div class="sec-lbl" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>GitHub Gist 동기화</div>
-    <div class="raw-hint">Gist에 menu.json을 저장하거나 불러옵니다. 저장 시 GitHub Personal Access Token이 필요합니다.</div>
-    <input type="text" id="gistId" class="raw-area" style="min-height:auto;height:44px;padding:10px 15px;font-size:.82rem;font-family:inherit;resize:none;margin-bottom:6px" placeholder="Gist ID (예: a1b2c3d4e5f6ab78...)"/>
-    <input type="password" id="gistToken" class="raw-area" style="min-height:auto;height:44px;padding:10px 15px;font-size:.82rem;font-family:inherit;resize:none;margin-bottom:10px" placeholder="GitHub Token (저장 시 필요, ghp_...)"/>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <button class="abtn sec" style="margin-bottom:0" onclick="gistLoad()">⬇️ Gist 불러오기</button>
-      <button class="abtn pri" style="margin-bottom:0;box-shadow:none" onclick="gistSave()">⬆️ Gist 저장하기</button>
-    </div>
     <button class="abtn sec" onclick="closeAdmin()">← 돌아가기</button>
     <button class="abtn sec" onclick="openChangePw()">🔑 비밀번호 변경</button>
     <button class="abtn dan" onclick="doReset()">🗑️ 전체 초기화</button>
@@ -570,61 +562,9 @@ function openAdmin(){
   var p=document.getElementById('adminPanel');
   p.classList.add('on');p.scrollTop=0;
   gsap.fromTo(p,{opacity:0,y:20},{opacity:1,y:0,duration:.35,ease:'power3.out'});
-  if(_lsOk){
-    var savedId=localStorage.getItem('gkGistId')||'';
-    document.getElementById('gistId').value=savedId;
-  }
 }
 function closeAdmin(){var p=document.getElementById('adminPanel');gsap.to(p,{opacity:0,y:20,duration:.28,ease:'power2.in',onComplete:function(){p.classList.remove('on');}});}
 function setStatus(msg,type){var el=document.getElementById('statusBar');el.className='status-bar show '+(type||'info');el.innerHTML=msg;}
-
-/* ── GitHub Gist 동기화 ── */
-async function gistLoad(){
-  var id=document.getElementById('gistId').value.trim();
-  if(!id){setStatus('❌ Gist ID를 입력하세요.','err');return;}
-  setStatus('<span class="spin"></span> Gist에서 불러오는 중…','info');
-  try{
-    var r=await fetch('https://api.github.com/gists/'+id,{
-      headers:{'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
-    });
-    if(!r.ok)throw new Error('Gist 응답 오류: '+r.status);
-    var data=await r.json();
-    var file=data.files&&data.files['menu.json'];
-    if(!file)throw new Error('Gist에서 menu.json 파일을 찾을 수 없습니다.');
-    var parsed=JSON.parse(file.content);
-    Object.assign(menuData,parsed);
-    saveData();render();
-    if(_lsOk)localStorage.setItem('gkGistId',id);
-    var cnt=Object.keys(parsed).length;
-    setStatus('✅ Gist에서 '+cnt+'일치 메뉴를 불러왔습니다!','ok');
-    showPopup('ok','Gist 동기화 완료!',cnt+'일치 메뉴를 불러왔습니다.');
-  }catch(e){setStatus('❌ '+esc(e.message),'err');}
-}
-
-async function gistSave(){
-  var id=document.getElementById('gistId').value.trim();
-  var token=document.getElementById('gistToken').value.trim();
-  if(!id){setStatus('❌ Gist ID를 입력하세요.','err');return;}
-  if(!token){setStatus('❌ GitHub Token을 입력하세요.','err');return;}
-  if(!Object.keys(menuData).length){setStatus('❌ 저장할 메뉴 데이터가 없습니다.','err');return;}
-  setStatus('<span class="spin"></span> Gist에 저장 중…','info');
-  try{
-    var r=await fetch('https://api.github.com/gists/'+id,{
-      method:'PATCH',
-      headers:{
-        'Authorization':'Bearer '+token,
-        'Accept':'application/vnd.github+json',
-        'Content-Type':'application/json',
-        'X-GitHub-Api-Version':'2022-11-28'
-      },
-      body:JSON.stringify({files:{'menu.json':{content:JSON.stringify(menuData,null,2)}}})
-    });
-    if(!r.ok){var err=await r.json();throw new Error(err.message||'저장 실패: '+r.status);}
-    if(_lsOk)localStorage.setItem('gkGistId',id);
-    setStatus('✅ Gist에 저장되었습니다!','ok');
-    showPopup('ok','Gist 저장 완료!','메뉴 데이터가 Gist에 동기화되었습니다.');
-  }catch(e){setStatus('❌ '+esc(e.message),'err');}
-}
 
 /* ── 저장 팝업 ── */
 function showPopup(type,title,msg){
