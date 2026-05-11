@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 8 8,18,27 * *'  # 매월 8, 18, 27일 오후 5시 KST (08:00 UTC)
   workflow_dispatch:
+  push:
+    branches: [master]
+    paths: ['.github/trigger']
 
 permissions:
   contents: write
