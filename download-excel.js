@@ -11,7 +11,7 @@ async function downloadLatestExcel() {
   }
 
   const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ acceptDownloads: true });
+  const context = await browser.newContext({ acceptDownloads: true, ignoreHTTPSErrors: true });
   const page = await context.newPage();
 
   console.log('페이지 열기:', TARGET_URL);
