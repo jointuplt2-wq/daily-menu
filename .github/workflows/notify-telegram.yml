@@ -3,7 +3,6 @@ name: 텔레그램 식단 알림
 on:
   schedule:
     - cron: '0 22 8,18,27 * *'   # 매월 9일 아침 07:00 KST (전날 22:00 UTC)
-    - cron: '0 3 9,19,28 * *'    # 매월 9,19,28일 점심 12:00 KST
     - cron: '30 8 9,19,28 * *'   # 매월 9,19,28일 저녁 17:30 KST
   workflow_dispatch:
     inputs:
