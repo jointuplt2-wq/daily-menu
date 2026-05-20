@@ -2,8 +2,10 @@ name: 텔레그램 식단 알림
 
 on:
   schedule:
-    - cron: '0 22 8,18,27 * *'   # 매월 9일 아침 07:00 KST (전날 22:00 UTC)
-    - cron: '30 8 9,19,28 * *'   # 매월 9,19,28일 저녁 17:30 KST
+    - cron: '0 22 9,19 * *'     # 매월 10,20일 아침 07:00 KST (전날 22:00 UTC)
+    - cron: '30 8 10,20 * *'    # 매월 10,20일 저녁 17:30 KST
+    - cron: '0 22 27-30 * *'    # 매월 마지막 날 아침 07:00 KST (전날 22:00 UTC, 조건 확인)
+    - cron: '30 8 28-31 * *'    # 매월 마지막 날 저녁 17:30 KST (조건 확인)
   workflow_dispatch:
     inputs:
       meal:
@@ -15,16 +17,38 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
+      - name: 마지막 날 여부 확인
+        id: check
+        run: |
+          SCHEDULE="${{ github.event.schedule }}"
+          SHOULD_RUN=true
+
+          if [[ "$SCHEDULE" == "0 22 27-30 * *" ]]; then
+            # 전날 22:00 UTC에 실행 → 내일(UTC)이 마지막 날인지 = 모레가 1일인지 확인
+            AFTER_TOMORROW=$(date -u -d '+2 days' +%d)
+            [ "$AFTER_TOMORROW" = "01" ] || SHOULD_RUN=false
+          elif [[ "$SCHEDULE" == "30 8 28-31 * *" ]]; then
+            # 당일 08:30 UTC에 실행 → 오늘(UTC)이 마지막 날인지 = 내일이 1일인지 확인
+            TOMORROW=$(date -u -d '+1 day' +%d)
+            [ "$TOMORROW" = "01" ] || SHOULD_RUN=false
+          fi
+
+          echo "should-run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+
       - uses: actions/checkout@v4
+        if: steps.check.outputs.should-run == 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.check.outputs.should-run == 'true'
         with:
           node-version: '20'
 
       - name: 의존성 설치
+        if: steps.check.outputs.should-run == 'true'
         run: npm install
 
       - name: 식사 시간 결정
+        if: steps.check.outputs.should-run == 'true'
         id: meal
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -41,6 +65,7 @@ jobs:
           fi
 
       - name: 텔레그램 알림 발송
+        if: steps.check.outputs.should-run == 'true'
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
