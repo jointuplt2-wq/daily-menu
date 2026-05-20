@@ -3,8 +3,10 @@ name: 텔레그램 식단 알림
 on:
   schedule:
     - cron: '0 22 9,19 * *'     # 매월 10,20일 아침 07:00 KST (전날 22:00 UTC)
+    - cron: '0 3 10,20 * *'     # 매월 10,20일 점심 12:00 KST
     - cron: '30 8 10,20 * *'    # 매월 10,20일 저녁 17:30 KST
     - cron: '0 22 27-30 * *'    # 매월 마지막 날 아침 07:00 KST (전날 22:00 UTC, 조건 확인)
+    - cron: '0 3 28-31 * *'     # 매월 마지막 날 점심 12:00 KST (조건 확인)
     - cron: '30 8 28-31 * *'    # 매월 마지막 날 저녁 17:30 KST (조건 확인)
   workflow_dispatch:
     inputs:
@@ -27,8 +29,8 @@ jobs:
             # 전날 22:00 UTC에 실행 → 내일(UTC)이 마지막 날인지 = 모레가 1일인지 확인
             AFTER_TOMORROW=$(date -u -d '+2 days' +%d)
             [ "$AFTER_TOMORROW" = "01" ] || SHOULD_RUN=false
-          elif [[ "$SCHEDULE" == "30 8 28-31 * *" ]]; then
-            # 당일 08:30 UTC에 실행 → 오늘(UTC)이 마지막 날인지 = 내일이 1일인지 확인
+          elif [[ "$SCHEDULE" == "0 3 28-31 * *" || "$SCHEDULE" == "30 8 28-31 * *" ]]; then
+            # 당일 UTC에 실행 → 오늘(UTC)이 마지막 날인지 = 내일이 1일인지 확인
             TOMORROW=$(date -u -d '+1 day' +%d)
             [ "$TOMORROW" = "01" ] || SHOULD_RUN=false
           fi
