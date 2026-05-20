@@ -19,6 +19,10 @@ const menuData = JSON.parse(fs.readFileSync('menu.json', 'utf-8'));
 const today = todayKST();
 const dayMenu = menuData[today];
 
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 const icon = MEAL === '아침' ? '🌅' : MEAL === '점심' ? '☀️' : '🌙';
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 const d = new Date(today);
@@ -26,17 +30,17 @@ const dayStr = DAYS[d.getDay()] + '요일';
 
 let text;
 if (!dayMenu || !dayMenu[MEAL] || !dayMenu[MEAL].length) {
-  text = `${icon} *${MEAL} 메뉴* (${today.slice(5)} ${dayStr})\n\n등록된 메뉴가 없습니다.`;
+  text = `${icon} <b>${escapeHtml(MEAL)} 메뉴</b> (${today.slice(5)} ${dayStr})\n\n등록된 메뉴가 없습니다.`;
 } else {
-  const items = dayMenu[MEAL].map(item => `• ${item}`).join('\n');
-  text = `${icon} *경기케어 ${MEAL} 메뉴* (${today.slice(5)} ${dayStr})\n\n${items}\n\n🔗 [메뉴 보기](https://jointuplt2-wq.github.io/daily-menu/)`;
+  const items = dayMenu[MEAL].map(item => `• ${escapeHtml(item)}`).join('\n');
+  text = `${icon} <b>경기케어 ${escapeHtml(MEAL)} 메뉴</b> (${today.slice(5)} ${dayStr})\n\n${items}\n\n🔗 <a href="https://jointuplt2-wq.github.io/daily-menu/">메뉴 보기</a>`;
 }
 
 async function main() {
   const res = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'Markdown', disable_web_page_preview: false })
+    body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: false })
   });
   const result = await res.json();
   if (result.ok) console.log(`✅ ${MEAL} 메뉴 텔레그램 발송 완료`);
